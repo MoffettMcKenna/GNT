@@ -45,6 +45,7 @@
     <Compile Include="Endpoint\ASTP\ASTPConversation.cs" />
     <Compile Include="Endpoint\ASTP\ASTPCypher.cs" />
     <Compile Include="Endpoint\ASTP\ASTPClient.cs" />
+    <Compile Include="Endpoint\ASTP\ASTPFactory.cs" />
     <Compile Include="Endpoint\ASTP\ASTPServer.cs" />
     <Compile Include="Endpoint\EndpointFactory.cs" />
     <Compile Include="Endpoint\ClientEndpoint.cs" />

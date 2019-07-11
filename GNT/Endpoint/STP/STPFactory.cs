@@ -30,6 +30,16 @@ namespace GNT.Endpoint.STP {
 		}
 
 		/// <summary>
+		/// Creates a client using the specified interface.  The type is ignored for STP Clients.
+		/// </summary>
+		/// <param name="nic">The interface the socket will use.</param>
+		/// <param name="type">Ignored</param>
+		/// <returns>The client object.</returns>
+		public override AbsClientEndpt CreateClient(string nic, string type) {
+			return new STPClient(nic);
+		}
+
+		/// <summary>
 		/// Creates a server who will use the default interface.
 		/// </summary>
 		/// <returns>The server object.</returns>

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace GNT.Endpoint.ASTP {
 	class ASTPServer : AbsServerEndpt {
 		private readonly string interf;
-		private readonly LeftShiftCypher left = new LeftShiftCypher();
-		private readonly RightShiftCypher right = new RightShiftCypher();
+		private LeftShiftCypher left;
+		private RightShiftCypher right;
 
 		public ASTPServer() {
 			interf = "default";
@@ -34,5 +34,8 @@ namespace GNT.Endpoint.ASTP {
 			System.Console.WriteLine("ASTPServer is stopping.");
 		}
 		#endregion
+
+		public LeftShiftCypher Left { get => left; set => left = value; }
+		public RightShiftCypher Right { get => right; set => right = value; }
 	}
 }

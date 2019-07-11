@@ -18,6 +18,13 @@ namespace GNT.Endpoint {
 		/// <returns>The client object.</returns>
 		public abstract AbsClientEndpt CreateClient(string nic);
 		/// <summary>
+		/// Creates a client using the specified interface and the type variation.
+		/// </summary>
+		/// <param name="nic">The interface the socket will use.</param>
+		/// <param name="type">Specification as to the type of the client which should be made.</param>
+		/// <returns>The client object.</returns>
+		public abstract AbsClientEndpt CreateClient(string nic, string type);
+		/// <summary>
 		/// Creates a server who will use the default interface.
 		/// </summary>
 		/// <returns>The server object.</returns>
