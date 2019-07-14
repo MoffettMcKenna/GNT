@@ -6,15 +6,8 @@ using System.Threading.Tasks;
 
 namespace GNT.Endpoint.STP {
 	class STPClient : AbsClientEndpt {
-		private readonly string interf;
 
-		public STPClient() {
-			interf = "default";
-		}
-
-		public STPClient(string nic) {
-			interf = nic;
-		}
+		public STPClient() { }
 
 		#region AbsClientEndpt
 		/// <summary>
@@ -23,7 +16,7 @@ namespace GNT.Endpoint.STP {
 		/// <param name="msg">The message to send.</param>
 		/// <returns></returns>
 		public override bool SendAlert(string msg) {
-			System.Console.WriteLine("STPClient is using " + interf + " to send Alert " + msg);
+			System.Console.WriteLine("STPClient is Sending Alert " + msg);
 			return true;
 		}
 
@@ -33,7 +26,7 @@ namespace GNT.Endpoint.STP {
 		/// <param name="msg">The message to send.</param>
 		/// <returns>The response.</returns>
 		public override string SendMsg(string msg) {
-			System.Console.WriteLine("STPClient is using " + interf + " to send Message " + msg);
+			System.Console.WriteLine("STPClient is Sending Message " + msg);
 			return msg;  //simulate echo
 		}
 		#endregion

@@ -21,22 +21,12 @@ namespace GNT.Endpoint.STP {
 		}
 
 		/// <summary>
-		/// Creates a client using the specified interface.
+		/// Creates a cliente.  The type is ignored for STP Clients.
 		/// </summary>
-		/// <param name="nic">The interface the socket will use.</param>
-		/// <returns>The client object.</returns>
-		public override AbsClientEndpt CreateClient(string nic) {
-			return new STPClient(nic);
-		}
-
-		/// <summary>
-		/// Creates a client using the specified interface.  The type is ignored for STP Clients.
-		/// </summary>
-		/// <param name="nic">The interface the socket will use.</param>
 		/// <param name="type">Ignored</param>
 		/// <returns>The client object.</returns>
-		public override AbsClientEndpt CreateClient(string nic, string type) {
-			return new STPClient(nic);
+		public override AbsClientEndpt CreateClient(string type) {
+			return new STPClient();
 		}
 
 		/// <summary>
@@ -48,12 +38,13 @@ namespace GNT.Endpoint.STP {
 		}
 
 		/// <summary>
-		/// Creates a server using the specified interface.
+		/// Creates a server.  For STP the type specification is ignored.
 		/// </summary>
-		/// <param name="nic">The interface the socket will use.</param>
+		/// <param name="type">This value is ignored for this protocol.</param>
 		/// <returns>The server object.</returns>
-		public override AbsServerEndpt CreateServer(string nic) {
-			return new STPServer(nic);
+		public override AbsServerEndpt CreateServer(string type) {
+			return new STPServer();
 		}
+
 	}
 }

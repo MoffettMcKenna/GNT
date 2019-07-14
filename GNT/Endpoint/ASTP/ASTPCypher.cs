@@ -10,7 +10,7 @@ namespace GNT.Endpoint.ASTP {
 	/// The Advanced Simple Text Protocol uses a char by char encryption scheme, represented by this class.  The specific substituitions will be determined by the subclasses through the Template pattern.
 	/// </summary>
 	abstract class AbsASTPCypher{
-		protected const char[] key = new char[] { '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\','Q','W','E','R','T','Y','U','I','O','P','{ ',' }',' | ','a','s','d','f','g','h','j','k','l',';',''','A','S','D','F','G','H','J','K','L',':','"','z','x','c','v','b','n','m',',','.','/','Z','X','C','V','B','N','M','<','>','?',' ','\t','\n','\r'};
+		protected readonly char[] key = new char[] { '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\','Q','W','E','R','T','Y','U','I','O','P','{','}','|','a','s','d','f','g','h','j','k','l',';','\'','A','S','D','F','G','H','J','K','L',':','"','z','x','c','v','b','n','m',',','.','/','Z','X','C','V','B','N','M','<','>','?',' ','\t','\n','\r'};
 
 		/// <summary>
 		/// Encrypts a string.

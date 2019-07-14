@@ -14,6 +14,7 @@ namespace GNT.Engine {
 		private List<AbsReportWriter> reporters;
 		private AbsClientEndpt client;
 		private AbsServerEndpt server;
+		private string nickname;
 
 		/// <summary>
 		/// Base constructor to initialize all structures.
@@ -65,6 +66,11 @@ namespace GNT.Engine {
 		/// All the reports which need to be generated.
 		/// </summary>
 		internal List<AbsReportWriter> Reporters { get => reporters; }
+
+		/// <summary>
+		/// A quick handle for the testing this engine does.
+		/// </summary>
+		public string Nickname { get => nickname; set => nickname = value; }
 	}
 
 	/// <summary>

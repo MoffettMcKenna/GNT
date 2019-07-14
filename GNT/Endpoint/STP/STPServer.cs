@@ -7,22 +7,15 @@ using GNT.Endpoint;
 
 namespace GNT.Endpoint.STP {
 	class STPServer : AbsServerEndpt {
-		private readonly string interf;
 
-		public STPServer() {
-			interf = "default";
-		}
-
-		public STPServer(string nic) {
-			interf = nic;
-		}
+		public STPServer() { }
 
 		#region AbsServerEndpt
 		/// <summary>
 		/// Start listening for an incoming connection.  Implementing classes will need to determine how to manage connections.
 		/// </summary>
 		public override void Listen() {
-			System.Console.WriteLine("STPServer is listening for incoming connections on interface " + interf + ".");
+			System.Console.WriteLine("STPServer is listening for incoming connections");
 		}
 
 		/// <summary>

@@ -16,6 +16,7 @@ namespace GNT.Endpoint.ASTP {
 			this.cypher = code;
 			this.messages = new List<string>();
 			this.responses = new List<string>();
+			port = p;
 		}
 
 		/// <summary>

@@ -6,16 +6,9 @@ using System.Threading.Tasks;
 
 namespace GNT.Endpoint.ASTP {
 	class ASTPClient : AbsClientEndpt {
-		private readonly string interf;
 		private AbsASTPCypher cypher;
 
 		public ASTPClient() {
-			interf = "default";
-			cypher = null;
-		}
-
-		public ASTPClient(string nic) {
-			interf = nic;
 			cypher = null;
 		}
 
@@ -26,7 +19,7 @@ namespace GNT.Endpoint.ASTP {
 		/// <param name="msg">The message to send.</param>
 		/// <returns></returns>
 		public override bool SendAlert(string msg) {
-			System.Console.WriteLine("ASTPClient is using " + interf + " to send Alert " + msg);
+			System.Console.WriteLine("ASTPClient is Sending Alert " + msg);
 			return true;
 		}
 
@@ -36,7 +29,7 @@ namespace GNT.Endpoint.ASTP {
 		/// <param name="msg">The message to send.</param>
 		/// <returns>The response.</returns>
 		public override string SendMsg(string msg) {
-			System.Console.WriteLine("ASTPClient is using " + interf + " to send Message " + msg);
+			System.Console.WriteLine("ASTPClient is Sending Message " + msg);
 			return msg;  //simulate echo
 		}
 		#endregion
