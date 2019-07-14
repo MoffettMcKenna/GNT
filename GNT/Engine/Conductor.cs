@@ -10,7 +10,7 @@ using System.Reflection;
 namespace GNT.Engine {
 	class Conductor {
 		private string cfgfile;
-		private const string SRC = "source";
+		private const string SRC = "Source";
 
 		/// <summary>
 		/// 
@@ -33,11 +33,13 @@ namespace GNT.Engine {
 			sections = processor.Process(cfgfile);
 
 			foreach(string sec in sections.Keys) {
+				System.Console.WriteLine("Processing Section " + sec);
 				if (!sections[sec].ContainsKey(SRC)) throw new Exception("Section " + sec + " does not have a Source"); //TODO get a custom exception here
-				if (!sections[sec].ContainsKey("protocol")) throw new Exception("Section " + sec + " does not have a Protocol"); //TODO get a custom exception here
+				if (!sections[sec].ContainsKey("Protocol")) throw new Exception("Section " + sec + " does not have a Protocol"); //TODO get a custom exception here
 
 				//make the type
-				string mechType = sections[sec][SRC] + "Mechanic";
+				string mechType = "GNT.Engine." + sections[sec][SRC] + "Mechanic";
+				System.Console.WriteLine("\tBuilding Mechanic " + mechType);
 
 				//convert the string to a mechanic
 				Type t = Type.GetType(mechType);
@@ -94,14 +96,14 @@ namespace GNT.Engine {
 	/// </summary>
 	public class CfgProcessor {
 		private Dictionary<string, Dictionary<string, string>> data;
-		private const string HDR_REG = @"^\[[a-zA-Z]*\]";
+		private const string HDR_REG = @"^\[[a-zA-Z0-9\s]*\]";
 		private Regex hdr_rx;
 
 		/// <summary>
 		/// Creates a config file processor.
 		/// </summary>
 		public CfgProcessor() {
-			hdr_rx = new Regex(HDR_REG);
+			hdr_rx = new Regex(HDR_REG, RegexOptions.Multiline);
 		}
 
 		public Dictionary<string, Dictionary<string, string>> Process(string file) {
@@ -152,13 +154,16 @@ namespace GNT.Engine {
 
 			//process the file - if there is another section we will abort and call another
 			while ((line = reader.ReadLine()) != null) {
+				System.Console.WriteLine("Read line " + line);
 				if(checkForSection(line, out secName)) {
-					if(section.Count > 0) data.Add(name.ToLower(), section); //skip any sections which were empty
+					System.Console.WriteLine("\tLine " + line + " is new section header " + secName);
+					processSection(secName, reader);
 					//on return we should have read any further sections and hit the EoF
 					break;
 				}
 				//if there's an equal sign this is most likely a field
 				else if (line.Contains("=")) {
+					System.Console.WriteLine("\tProcessing line as field");
 					int lb = line.IndexOf('#');
 					int sc = line.IndexOf(';');
 
@@ -170,12 +175,13 @@ namespace GNT.Engine {
 					if (parts.Length > 2) throw new InvalidDataException("CfgProcessor.processSection - too many ='s in line " + line);
 
 					//return the key-value pair
-					section.Add(parts[0].ToLower(), (parts.Length == 2 ? parts[1] : string.Empty));
+					section.Add(parts[0], (parts.Length == 2 ? parts[1] : string.Empty));
 				}
-
 				//no need for other else's - the rest will be comments and empty lines
 
 			} //end while line = readline
+
+			if (section.Count > 0) data.Add(name, section); //skip any sections which were empty
 		} //end processSection
 
 	} //end class CfgProcessor

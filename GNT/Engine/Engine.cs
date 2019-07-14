@@ -20,6 +20,7 @@ namespace GNT.Engine {
 		/// Base constructor to initialize all structures.
 		/// </summary>
 		protected AbsEngine() {
+			System.Console.WriteLine("Created new AbsEngine.");
 			reporters = new List<AbsReportWriter>();
 		}
 
@@ -98,14 +99,14 @@ namespace GNT.Engine {
 		/// </summary>
 		/// <param name="id">The id of the test case to run.</param>
 		public override void Run(int id) {
-			System.Console.WriteLine("RawTextEngine.Run Running " + id);
+			System.Console.WriteLine("RawTextEngine.Run - Running " + id);
 		}
 
 		/// <summary>
 		/// Runs all the test cases the engine has.
 		/// </summary>
 		public override void RunAll() {
-			System.Console.WriteLine("RawTextEngine.Run Running all tests.");
+			System.Console.WriteLine("RawTextEngine.RunAll - Running all tests.");
 		}
 
 		/// <summary>
@@ -113,7 +114,7 @@ namespace GNT.Engine {
 		/// </summary>
 		/// <param name="ids">A list of the test case id's to run.</param>
 		public override void RunMultiple(int[] ids) {
-			System.Console.WriteLine("RawTextEngine.Run Running these tests: " + string.Join(", ", ids));
+			System.Console.WriteLine("RawTextEngine.RunMultiple - Running these tests: " + string.Join(", ", ids));
 		}
 		#endregion
 

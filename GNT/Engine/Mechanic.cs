@@ -15,12 +15,13 @@ namespace GNT.Engine {
 		protected AbsEngine eng;
 		private const char DELIM = ':';
 
+		//The required information which MUST be set at least once for the engine to run correctly
 		//while these are technically a bitmask, we can be lazy and use addition
 		protected const byte SERVER_SET = 1;
 		protected const byte CLIENT_SET = 2;
 		protected const byte REPORT_SET = 4;
-		protected const byte SOURCE_SET = 8;
-		protected const byte READY = SERVER_SET + CLIENT_SET + REPORT_SET + SOURCE_SET;
+		protected const byte SOURCE_SET = 8; //test script locations
+		protected const byte READY = SERVER_SET + CLIENT_SET + REPORT_SET + SOURCE_SET;  //protected for over-rides, in case an engine has an extra requriement
 
 		//when this is the sum of the constants above, we're done (at least one of everythign is set)
 		protected byte done = 0;
@@ -81,7 +82,7 @@ namespace GNT.Engine {
 		 */
 		private void makeClient() {
 			//build the full type string
-			string factType = "GNT.Enpoint." + proto + "." + proto + "Factory";
+			string factType = "GNT.Endpoint." + proto + "." + proto + "Factory";
 
 			//get the type
 			Type t = Type.GetType(factType);
@@ -117,7 +118,7 @@ namespace GNT.Engine {
 		 */
 		private void makeServer() {
 			//build the full type string
-			string factType = "GNT.Enpoint." + proto + "." + proto + "Factory";
+			string factType = "GNT.Endpoint." + proto + "." + proto + "Factory";
 
 			//get the type
 			Type t = Type.GetType(factType);
@@ -146,9 +147,9 @@ namespace GNT.Engine {
 				proto = value;
 
 				//create a server once we know the protocol
-				if((done & SERVER_SET) != 0) makeServer();
+				if((done & SERVER_SET) == 0) makeServer();
 				//if the client info has already been set make it
-				if ((done & CLIENT_SET) != 0) makeClient();
+				if ((done & CLIENT_SET) == 0) makeClient();
 			}
 		}
 
@@ -179,7 +180,12 @@ namespace GNT.Engine {
 		/// <summary>
 		/// Add a new folder to the list of the source directories.
 		/// </summary>
-		public string Folder { set { (eng as RawTextEngine).AddFolder(value); } }
+		public string Folder {
+			set {
+				(eng as RawTextEngine).AddFolder(value);
+				done += SOURCE_SET;
+			}
+		}
 
 	} //end class RawTextMechanic
 } //end namespace GNT.Engine
