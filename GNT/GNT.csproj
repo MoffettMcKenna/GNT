@@ -67,6 +67,9 @@
     <None Include="Config.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="UML Diagrams\Endpoints.dia" />
+    <None Include="UML Diagrams\Mechanics.dia" />
+    <None Include="UML Diagrams\Reporters.dia" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

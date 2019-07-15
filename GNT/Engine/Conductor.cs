@@ -34,8 +34,13 @@ namespace GNT.Engine {
 
 			foreach(string sec in sections.Keys) {
 				System.Console.WriteLine("Processing Section " + sec);
-				if (!sections[sec].ContainsKey(SRC)) throw new Exception("Section " + sec + " does not have a Source"); //TODO get a custom exception here
-				if (!sections[sec].ContainsKey("Protocol")) throw new Exception("Section " + sec + " does not have a Protocol"); //TODO get a custom exception here
+
+				/* TODO want to change the structure of sectons to Dict<string, List<KeyValuePair<string, string>>> 
+				 * for multiple keys but need to find a way to preserve these two sanity checks in that strucuture.
+				 */
+				if (!sections[sec].ContainsKey(SRC)) throw new Exception("Section " + sec + " does not have a Source"); 
+				//TODO get a custom exception for both these lines
+				if (!sections[sec].ContainsKey("Protocol")) throw new Exception("Section " + sec + " does not have a Protocol");
 
 				//make the type
 				string mechType = "GNT.Engine." + sections[sec][SRC] + "Mechanic";
@@ -106,6 +111,11 @@ namespace GNT.Engine {
 			hdr_rx = new Regex(HDR_REG, RegexOptions.Multiline);
 		}
 
+		/// <summary>
+		/// Converts the file given into a data structure which can be used.
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns></returns>
 		public Dictionary<string, Dictionary<string, string>> Process(string file) {
 			//re-init data to clear any previos runs
 			data = new Dictionary<string, Dictionary<string, string>>();
