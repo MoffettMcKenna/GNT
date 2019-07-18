@@ -84,7 +84,7 @@ namespace GNT.Engine {
 	class RawTextEngine : AbsEngine {
 		private List<string> folders;
 		private Dictionary<int, string> tcLookup; //a lookup - each entry is the test case id and the line for the test case
-		private const string EXT = ".txt";
+		private const string EXT = "*.txt";
 		private const char DELIM = ':';
 
 		//indices for the columns in the file - which parts map to what
@@ -115,10 +115,10 @@ namespace GNT.Engine {
 			//check that we had exactly the correct number of fields
 			if (parts.Length == COL_CNT) {
 				//send the message
-				string rsp = Client.SendMsg(parts[MSG_DEX]);
+				string rsp = Client.SendMsg(parts[MSG_DEX].Trim());
 
 				//check the response
-				if (rsp.CompareTo(parts[RSP_DEX]) == 0) {
+				if (rsp.CompareTo(parts[RSP_DEX].Trim()) == 0) {
 					System.Console.WriteLine("RawTextEngine.Run - Test Case " + parts[ID_DEX] + " Passed.");
 					reportPass(parts[MSG_DEX], id, rsp);
 				} else {
@@ -175,14 +175,26 @@ namespace GNT.Engine {
 							string[] parts = line.Split(new char[] { DELIM });
 
 							//sanity check that the line was as expected
-							if(parts.Length != COL_CNT) {
+							if (parts.Length != COL_CNT) {
 								System.Console.WriteLine("RawTextEngine.AddFolder - cannot parse line " + line);
 								continue; //skip this running
-							} 
-							else {
+							} else {
 								int id = 0;
 								//if the id field can be parsed add it adn the line to the test case lookup
-								if (int.TryParse(parts[ID_DEX], out id)) tcLookup.Add(id, line);
+								if (int.TryParse(parts[ID_DEX], out id)) {
+									try {
+										tcLookup.Add(id, line);
+									}
+									catch (ArgumentNullException ane) {
+										System.Console.WriteLine("RawTextEngine.AddFolder - cannot add test case " + line + "\n\t" + ane.Message);
+										continue;
+									}
+									catch (ArgumentException ae) {
+										System.Console.WriteLine("RawTextEngine.AddFolder - cannot add test case " + line + "\n\t" + ae.Message);
+										continue;
+									}
+								} //end if TryParse
+						
 							}
 
 						} //end while readLine()

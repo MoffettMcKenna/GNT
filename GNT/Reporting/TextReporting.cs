@@ -24,7 +24,9 @@ namespace GNT.Reporting {
 	/// </summary>
 	class TextReporter : AbsReportWriter {
 		private string fp;
-		
+		private const int MAX_FSIZE = 51200; //50 KB max file size
+		private const string DT_FORMAT = "ddMMYY.HHmmss";
+
 		/// <summary>
 		/// Creates the object, and if the file doesn't exist creates it as well.  If the file does exist it is rolled.
 		/// </summary>
@@ -40,12 +42,81 @@ namespace GNT.Reporting {
 		/// <returns>True if the operation succeeded.</returns>
 		public override bool Restart(bool roll) {
 			if (roll) {
-				System.Console.WriteLine("TextReporter: restarting the file - rolling");
+				string ext = "";
+				try {
+					ext = DateTime.Now.ToString(DT_FORMAT);
+				}
+				#region Exception Handling
+				catch (FormatException fe) {
+					System.Console.WriteLine("TextReporter.Restart Error in time format string: " + fe.Message);
+					return false;
+				}
+				catch (ArgumentOutOfRangeException aooe) {
+					System.Console.WriteLine("TextReporter.Restart Date outside calendar range: " + aooe.Message);
+					return false;
+				}
+				#endregion
+				try {
+					File.Move(fp, fp + ext);
+					return true;
+				}
+				#region Exception Handling
+				//TODO maybe handle some of these better
+				catch (ArgumentNullException ane) {
+					System.Console.WriteLine("TextReporter.Restart Error on Move: " + ane.Message);
+				}
+				catch (ArgumentException ae) {
+					System.Console.WriteLine("TextReporter.Restart Error on Move: " + ae.Message);
+				}
+				catch (UnauthorizedAccessException uae) {
+					System.Console.WriteLine("TextReporter.Restart Error on Move: " + uae.Message);
+				}
+				catch (PathTooLongException ptle) {
+					System.Console.WriteLine("TextReporter.Restart Error on Move: " + ptle.Message);
+				}
+				catch (DirectoryNotFoundException dnfe) {
+					System.Console.WriteLine("TextReporter.Restart Error on Move: " + dnfe.Message);
+				}
+				catch (NotSupportedException nse) {
+					System.Console.WriteLine("TextReporter.Restart Error on Move: " + nse.Message);
+				}
+				catch (IOException ioe) {
+					System.Console.WriteLine("TextReporter.Restart Error on Move: " + ioe.Message);
+				}
+				#endregion
+
 			} else {
-				System.Console.WriteLine("TextReporter: restarting the file - not rolling");
-			}
+				//just delete it and let the next Update() call recreate it
+				try {
+					File.Delete(fp);
+				}
+				#region Exception Handling
+				//TODO maybe handle some of these better
+				catch (ArgumentNullException ane) {
+					System.Console.WriteLine("TextReporter.Restart Error on Delete: " + ane.Message);
+				}
+				catch (ArgumentException ae) {
+					System.Console.WriteLine("TextReporter.Restart Error on Delete: " + ae.Message);
+				}
+				catch (UnauthorizedAccessException uae) {
+					System.Console.WriteLine("TextReporter.Restart Error on Delete: " + uae.Message);
+				}
+				catch (PathTooLongException ptle) {
+					System.Console.WriteLine("TextReporter.Restart Error on Delete: " + ptle.Message);
+				}
+				catch (DirectoryNotFoundException dnfe) {
+					System.Console.WriteLine("TextReporter.Restart Error on Delete: " + dnfe.Message);
+				}
+				catch (NotSupportedException nse) {
+					System.Console.WriteLine("TextReporter.Restart Error on Delete: " + nse.Message);
+				}
+				catch (IOException ioe) {
+					System.Console.WriteLine("TextReporter.Restart Error on Delete: " + ioe.Message);
+				}
+				#endregion
+			} //end else
 			return true;
-		}
+		} //end Restart()
 
 		/// <summary>
 		/// Write a new line to the file.
@@ -60,22 +131,23 @@ namespace GNT.Reporting {
 
 			//build the message to write to file
 			/* In these messages:
-			 *	0 = test case id
-			 *	1 = test case title
-			 *	2 = the message
+			 * 0 = timestamp
+			 *	1 = test case id
+			 *	2 = test case title
+			 *	3 = the message
 			 */
 			switch(status) {
 				case TestStatus.Failed:
-					sample = "{0}: {1} - Test Case Failed ({2})";
+					sample = "{0}: Test Case {1}: {2} Failed ({3})";
 					break;
 				case TestStatus.Stopped:
-					sample = "{0}: {1} - Test Case Execution Halted ({2})";
+					sample = "{0}: Test Case {1}: {2} Execution Halted ({3})";
 					break;
 				case TestStatus.Running:
-					sample = "{0}: {1} - {2}";
+					sample = "{0}: Test Case {1}: {2} - {3}";
 					break;
 				case TestStatus.Passed:
-					sample = "{0}: {1} - Test Case Passed ({2})";
+					sample = "{0}: Test Case {1}: {2} Passed ({3})";
 					break;
 				default:
 					break;
@@ -113,8 +185,17 @@ namespace GNT.Reporting {
 						System.Console.WriteLine("TextReporter.Update wtf encoding error: " + efe.ToString());
 					}
 					#endregion
-					return true;
+
 				} //end using printer
+
+				//if the file is now larger than 
+				if ((new FileInfo(fp)).Length > MAX_FSIZE) {
+					this.Restart(true);
+				}
+
+				//no matter if the file rolled or not, the write succeeded
+				return true;
+
 			} //end outer try
 			#region Exception Handling
 			catch (Exception e) {

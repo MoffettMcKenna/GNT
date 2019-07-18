@@ -71,5 +71,13 @@
     <None Include="UML Diagrams\Mechanics.dia" />
     <None Include="UML Diagrams\Reporters.dia" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestFile1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TextFile2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

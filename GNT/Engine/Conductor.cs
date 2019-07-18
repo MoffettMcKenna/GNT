@@ -151,7 +151,7 @@ namespace GNT.Engine {
 		/// <returns></returns>
 		public Dictionary<string, List<KeyValuePair<string, string>>> Process(string file) {
 			//re-init data to clear any previos runs
-			data = new Dictionary<string, Dictionary<string, string>>();
+			data = new Dictionary<string, List<KeyValuePair<string, string>>>();
 
 			using (StreamReader reader = new StreamReader(file)) {
 				//start with a section called general for system configurations

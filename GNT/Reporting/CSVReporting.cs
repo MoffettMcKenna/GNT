@@ -24,6 +24,8 @@ namespace GNT.Reporting {
 	/// </summary>
 	class CSVReporter : AbsReportWriter {
 		private string fp;
+		private const int MAX_FSIZE = 51200; //50 KB max file size
+		private const string DT_FORMAT = "ddMMYY.HHmmss";
 
 		/// <summary>
 		/// Creates the object, and if the file doesn't exist creates it as well.  If the file does exist it is rolled.
@@ -40,10 +42,79 @@ namespace GNT.Reporting {
 		/// <returns>True if the operation succeeded.</returns>
 		public override bool Restart(bool roll) {
 			if (roll) {
-				System.Console.WriteLine("CSVReporter: restarting the file - rolling");
+				string ext = "";
+				try {
+					ext = DateTime.Now.ToString(DT_FORMAT);
+				}
+				#region Exception Handling
+				catch (FormatException fe) {
+					System.Console.WriteLine("CSVReporter.Restart Error in time format string: " + fe.Message);
+					return false;
+				}
+				catch (ArgumentOutOfRangeException aooe) {
+					System.Console.WriteLine("CSVReporter.Restart Date outside calendar range: " + aooe.Message);
+					return false;
+				}
+				#endregion
+				try {
+					File.Move(fp, fp + ext);
+					return true;
+				}
+				#region Exception Handling
+				//TODO maybe handle some of these better
+				catch (ArgumentNullException ane) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Move: " + ane.Message);
+				}
+				catch (ArgumentException ae) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Move: " + ae.Message);
+				}
+				catch (UnauthorizedAccessException uae) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Move: " + uae.Message);
+				}
+				catch (PathTooLongException ptle) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Move: " + ptle.Message);
+				}
+				catch (DirectoryNotFoundException dnfe) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Move: " + dnfe.Message);
+				}
+				catch (NotSupportedException nse) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Move: " + nse.Message);
+				}
+				catch (IOException ioe) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Move: " + ioe.Message);
+				}
+				#endregion
+
 			} else {
-				System.Console.WriteLine("CSVReporter: restarting the file - not rolling");
-			}
+				//just delete it and let the next Update() call recreate it
+				try {
+					File.Delete(fp);
+				}
+				#region Exception Handling
+				//TODO maybe handle some of these better
+				catch (ArgumentNullException ane) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Delete: " + ane.Message);
+				}
+				catch (ArgumentException ae) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Delete: " + ae.Message);
+				}
+				catch (UnauthorizedAccessException uae) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Delete: " + uae.Message);
+				}
+				catch (PathTooLongException ptle) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Delete: " + ptle.Message);
+				}
+				catch (DirectoryNotFoundException dnfe) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Delete: " + dnfe.Message);
+				}
+				catch (NotSupportedException nse) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Delete: " + nse.Message);
+				}
+				catch (IOException ioe) {
+					System.Console.WriteLine("CSVReporter.Restart Error on Delete: " + ioe.Message);
+				}
+				#endregion
+			} //end else
 			return true;
 		}
 
@@ -60,7 +131,10 @@ namespace GNT.Reporting {
 				using (StreamWriter printer = new StreamWriter(fp, true)) {
 					try {
 						//write the line
-						printer.WriteLine(String.Format("{0},{1},{2},{3}", new object[] { testId, title, status, message }));
+						printer.WriteLine(
+							String.Format("{0},{1},{2},{3},{4},{5}", 
+										new object[] { DateTime.Now.Date, DateTime.Now.ToShortTimeString(), testId, title, status, message })
+						);
 					}
 					#region Exception Handling
 					catch (ObjectDisposedException ode) {
@@ -88,8 +162,14 @@ namespace GNT.Reporting {
 						System.Console.WriteLine("CSVReporter.Update wtf encoding error: " + efe.ToString());
 					}
 					#endregion
-					return true;
 				} //end using printer
+
+				//if the file is now larger than 
+				if ((new FileInfo(fp)).Length > MAX_FSIZE) {
+					this.Restart(true);
+				}
+
+				return true;
 			} //end outer try
 			#region Exception Handling
 			catch (Exception e) {
