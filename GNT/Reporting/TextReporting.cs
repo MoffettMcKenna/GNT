@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,8 @@ namespace GNT.Reporting {
 		/// <returns>True if the write succeeded.</returns>
 		public override bool Update(string title, int testId, TestStatus status, string message) {
 			string sample = "";
+
+			//build the message to write to file
 			/* In these messages:
 			 *	0 = test case id
 			 *	1 = test case title
@@ -77,19 +80,49 @@ namespace GNT.Reporting {
 				default:
 					break;
 			}
+
 			try {
-				System.Console.WriteLine(String.Format(sample, new object[] { testId, title, message }));
-			}
-			catch(ArgumentNullException ane) {
-				System.Console.WriteLine("TextReporter.Update ArgumentNullException: " + ane.ToString());
+				using (StreamWriter printer = new StreamWriter(fp, true)) {
+					try {
+						//write the line
+						printer.WriteLine(String.Format(sample, new object[] { testId, title, message }));
+					}
+					#region Exception Handling
+					catch (ObjectDisposedException ode) {
+						System.Console.WriteLine("TextReporter.Update writer closed before update: " + ode.ToString());
+						return false;
+					}
+					catch (IOException ioe) {
+						System.Console.WriteLine("TextReporter.Update Error when writing: " + ioe.ToString());
+						return false;
+					}
+					#endregion
+
+					//safety
+					try {
+						printer.Flush();
+					}
+					#region Exception Handling
+					catch (ObjectDisposedException ode) {
+						System.Console.WriteLine("TextReporter.Update writer closed before flush: " + ode.ToString());
+					}
+					catch(IOException ioe) {
+						System.Console.WriteLine("TextReporter.Update general error when flushing: " + ioe.ToString());
+					}
+					catch(EncoderFallbackException efe) {
+						System.Console.WriteLine("TextReporter.Update wtf encoding error: " + efe.ToString());
+					}
+					#endregion
+					return true;
+				} //end using printer
+			} //end outer try
+			#region Exception Handling
+			catch (Exception e) {
+				System.Console.WriteLine("TextReporter.Update error opening file: " + e.ToString());
 				return false;
 			}
-			catch(FormatException fe) {
-				System.Console.WriteLine("TextReporter.Update FormatException: " + fe.ToString());
-				return false;
-			}
-			return true;
+			//TODO flush out the exception list here
+			#endregion
 		} //end Update
 	} //end TextReporter
-
 }

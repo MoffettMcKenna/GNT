@@ -26,24 +26,57 @@ namespace GNT.Engine {
 		/// <returns></returns>
 		public AbsEngine[] BuildEngines() {
 			List<AbsEngine> motors = new List<AbsEngine>();
-			Dictionary<string, Dictionary<string, string>> sections;
-
+			//using the List<KeyValuePair> structure allows me to have duplicate keys - multiple folders, reporters, etc..
+			Dictionary<string, List<KeyValuePair<string, string>>> sections;
+			
 			//translate the file into a multi-layer 
 			CfgProcessor processor = new CfgProcessor();
 			sections = processor.Process(cfgfile);
 
 			foreach(string sec in sections.Keys) {
 				System.Console.WriteLine("Processing Section " + sec);
+				string src = "";
 
-				/* TODO want to change the structure of sectons to Dict<string, List<KeyValuePair<string, string>>> 
-				 * for multiple keys but need to find a way to preserve these two sanity checks in that strucuture.
-				 */
-				if (!sections[sec].ContainsKey(SRC)) throw new Exception("Section " + sec + " does not have a Source"); 
-				//TODO get a custom exception for both these lines
-				if (!sections[sec].ContainsKey("Protocol")) throw new Exception("Section " + sec + " does not have a Protocol");
+				//Sanity check for Source entry
+				try {
+					src = sections[sec].Single(kvp => kvp.Key == SRC).Value;
+					if (src.Length == 0) {
+						System.Console.WriteLine("The Source entry is empty.");
+						continue;
+					}
+				}
+				#region Exception Handling
+				catch (ArgumentNullException ane) {
+					System.Console.WriteLine("Section " + sec + " does not have an entry.\n" + ane.Message);
+					//skip me
+					continue;
+				}
+				catch (InvalidOperationException ioe) {
+					System.Console.WriteLine("Section " + sec + " does not have a Source.\n" + ioe.Message);
+					//skip me
+					continue;
+				}
+				#endregion
+
+				//sanity check for Protocol
+				try {
+					if (sections[sec].Single(kvp => kvp.Key == "Protocol").Value.Length == 0) throw new Exception("Section " + sec + " does not have a Source");
+				}
+				#region Exception Handling
+				catch (ArgumentNullException ane) {
+					System.Console.WriteLine("Section " + sec + " does not have an entry.\n" + ane.Message);
+					//skip me
+					continue;
+				}
+				catch (InvalidOperationException ioe) {
+					System.Console.WriteLine("Section " + sec + " does not have a Protocol.\n" + ioe.Message);
+					//skip me
+					continue;
+				}
+				#endregion
 
 				//make the type
-				string mechType = "GNT.Engine." + sections[sec][SRC] + "Mechanic";
+				string mechType = "GNT.Engine." + src + "Mechanic";
 				System.Console.WriteLine("\tBuilding Mechanic " + mechType);
 
 				//convert the string to a mechanic
@@ -100,7 +133,7 @@ namespace GNT.Engine {
 	/// Converts a config file into a nested dictionary structure.
 	/// </summary>
 	public class CfgProcessor {
-		private Dictionary<string, Dictionary<string, string>> data;
+		private Dictionary<string, List<KeyValuePair<string, string>>> data;
 		private const string HDR_REG = @"^\[[a-zA-Z0-9\s]*\]";
 		private Regex hdr_rx;
 
@@ -116,7 +149,7 @@ namespace GNT.Engine {
 		/// </summary>
 		/// <param name="file"></param>
 		/// <returns></returns>
-		public Dictionary<string, Dictionary<string, string>> Process(string file) {
+		public Dictionary<string, List<KeyValuePair<string, string>>> Process(string file) {
 			//re-init data to clear any previos runs
 			data = new Dictionary<string, Dictionary<string, string>>();
 
@@ -160,7 +193,7 @@ namespace GNT.Engine {
 		private void processSection(string name, StreamReader reader) {
 			string line = "";
 			string secName;
-			Dictionary<string, string> section = new Dictionary<string, string>(); //hold the fields for this section
+			List < KeyValuePair<string, string>> section = new List<KeyValuePair<string, string>>(); //hold the fields for this section
 
 			//process the file - if there is another section we will abort and call another
 			while ((line = reader.ReadLine()) != null) {
@@ -185,7 +218,9 @@ namespace GNT.Engine {
 					if (parts.Length > 2) throw new InvalidDataException("CfgProcessor.processSection - too many ='s in line " + line);
 
 					//return the key-value pair
-					section.Add(parts[0], (parts.Length == 2 ? parts[1] : string.Empty));
+					section.Add(
+						new KeyValuePair<string, string>(parts[0], (parts.Length == 2 ? parts[1] : string.Empty))
+					);
 				}
 				//no need for other else's - the rest will be comments and empty lines
 

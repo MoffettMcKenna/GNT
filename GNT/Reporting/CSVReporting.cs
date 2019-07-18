@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,17 +57,46 @@ namespace GNT.Reporting {
 		/// <returns>True if the write succeeded.</returns>
 		public override bool Update(string title, int testId, TestStatus status, string message) {
 			try {
-				System.Console.WriteLine(String.Format("{0},{1},{2},{3}", new object[] { testId, title, status, message }));
-			}
-			catch (ArgumentNullException ane) {
-				System.Console.WriteLine("CSVReporter.Update ArgumentNullException: " + ane.ToString());
+				using (StreamWriter printer = new StreamWriter(fp, true)) {
+					try {
+						//write the line
+						printer.WriteLine(String.Format("{0},{1},{2},{3}", new object[] { testId, title, status, message }));
+					}
+					#region Exception Handling
+					catch (ObjectDisposedException ode) {
+						System.Console.WriteLine("CSVReporter.Update writer closed before update: " + ode.ToString());
+						return false;
+					}
+					catch (IOException ioe) {
+						System.Console.WriteLine("CSVReporter.Update Error when writing: " + ioe.ToString());
+						return false;
+					}
+					#endregion
+
+					//safety
+					try {
+						printer.Flush();
+					}
+					#region Exception Handling
+					catch (ObjectDisposedException ode) {
+						System.Console.WriteLine("CSVReporter.Update writer closed before flush: " + ode.ToString());
+					}
+					catch (IOException ioe) {
+						System.Console.WriteLine("CSVReporter.Update general error when flushing: " + ioe.ToString());
+					}
+					catch (EncoderFallbackException efe) {
+						System.Console.WriteLine("CSVReporter.Update wtf encoding error: " + efe.ToString());
+					}
+					#endregion
+					return true;
+				} //end using printer
+			} //end outer try
+			#region Exception Handling
+			catch (Exception e) {
+				System.Console.WriteLine("CSVReporter.Update error opening file: " + e.ToString());
 				return false;
 			}
-			catch (FormatException fe) {
-				System.Console.WriteLine("CSVReporter.Update FormatException: " + fe.ToString());
-				return false;
-			}
-			return true;
+			#endregion
 		} //end Update
 	} //end CSVReporter
 }
