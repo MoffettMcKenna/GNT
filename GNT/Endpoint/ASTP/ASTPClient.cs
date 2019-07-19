@@ -19,7 +19,7 @@ namespace GNT.Endpoint.ASTP {
 		/// <param name="msg">The message to send.</param>
 		/// <returns></returns>
 		public override bool SendAlert(string msg) {
-			System.Console.WriteLine("ASTPClient is Sending Alert " + msg);
+			System.Console.WriteLine("\t\tASTPClient is Sending Alert " + msg);
 			return true;
 		}
 
@@ -27,10 +27,16 @@ namespace GNT.Endpoint.ASTP {
 		/// Builds and sends a message and then waits on the response.
 		/// </summary>
 		/// <param name="msg">The message to send.</param>
-		/// <returns>The response.</returns>
+		/// <returns>The response or an empty string if there was none.</returns>
 		public override string SendMsg(string msg) {
-			System.Console.WriteLine("ASTPClient is Sending Message " + msg);
-			return msg;  //simulate echo
+			//TODO with the changes in conversation make this actually send and receive
+			ASTPConversation convo = new ASTPConversation(cypher, 0);
+			System.Console.WriteLine("\t\tASTPClient.SendMsg: Sending Message " + msg);
+			convo.AddMessage(msg);
+			convo.ProcessMsg(null, null);  //simulate the processing thread
+			string test = string.Empty;
+			convo.GetResponse(out test);  //making this call sets test
+			return test;
 		}
 		#endregion
 

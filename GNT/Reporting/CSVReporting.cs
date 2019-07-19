@@ -32,6 +32,7 @@ namespace GNT.Reporting {
 		/// </summary>
 		/// <param name="path">Full or relative path, including the filename, of the report.</param>
 		public CSVReporter(string path) {
+			System.Console.WriteLine("\t\t\tCreating a CSVReporter.");
 			fp = path;
 		}
 

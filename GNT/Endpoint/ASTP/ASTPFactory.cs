@@ -23,6 +23,7 @@ namespace GNT.Endpoint.ASTP {
 		/// </summary>
 		/// <returns>The client object.</returns>
 		public override AbsClientEndpt CreateClient() {
+			System.Console.WriteLine("\t\t\tASTPFactory.CreateClient: Creating a client with default options.");
 			ASTPClient client = new ASTPClient {
 				Cypher = left.Clone()
 			};
@@ -35,6 +36,7 @@ namespace GNT.Endpoint.ASTP {
 		/// <param name="type">Specifies the encryption algorithm, either right or left.  It is case insensitive.</param>
 		/// <returns>The client object.</returns>
 		public override AbsClientEndpt CreateClient(string type) {
+			System.Console.WriteLine("\t\t\tASTPFactory.CreateClient: Creating a client with " + type + " option.");
 			ASTPClient client = new ASTPClient();
 
 			//find the right encryption algorithm
@@ -50,6 +52,7 @@ namespace GNT.Endpoint.ASTP {
 		/// </summary>
 		/// <returns>The server object.</returns>
 		public override AbsServerEndpt CreateServer() {
+			System.Console.WriteLine("\t\t\tASTPFactory.CreateServer: Creating a server with default options.");
 			ASTPServer server = new ASTPServer {
 				Left = (left.Clone() as LeftShiftCypher),
 				Right = (right.Clone() as RightShiftCypher)
@@ -63,6 +66,7 @@ namespace GNT.Endpoint.ASTP {
 		/// <param name="type">This value is ignored for this protocol.</param>
 		/// <returns>The server object.</returns>
 		public override AbsServerEndpt CreateServer(string type) {
+			System.Console.WriteLine("\t\t\tASTPFactory.CreateServer: Creating a server with " + type + " option.");
 			ASTPServer server = new ASTPServer {
 				Left = (left.Clone() as LeftShiftCypher),
 				Right = (right.Clone() as RightShiftCypher)

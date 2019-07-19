@@ -21,7 +21,6 @@ namespace GNT.Engine {
 		/// Base constructor to initialize all structures.
 		/// </summary>
 		protected AbsEngine() {
-			System.Console.WriteLine("Created new AbsEngine.");
 			reporters = new List<AbsReportWriter>();
 		}
 
@@ -99,7 +98,7 @@ namespace GNT.Engine {
 		public RawTextEngine() {
 			folders = new List<string>();
 			tcLookup = new Dictionary<int, string>();
-			System.Console.WriteLine("I am a new RawTextEngine!");
+			System.Console.WriteLine("\t\tI am a new RawTextEngine!");
 		}
 
 		#region AbsEngine
@@ -108,7 +107,7 @@ namespace GNT.Engine {
 		/// </summary>
 		/// <param name="id">The id of the test case to run.</param>
 		public override void Run(int id) {
-			System.Console.WriteLine("RawTextEngine.Run - Running " + id);
+			//System.Console.WriteLine("RawTextEngine.Run - Running " + id);
 			//break it into pieces
 			string[] parts = tcLookup[id].Split(new char[] { DELIM });
 
@@ -119,14 +118,14 @@ namespace GNT.Engine {
 
 				//check the response
 				if (rsp.CompareTo(parts[RSP_DEX].Trim()) == 0) {
-					System.Console.WriteLine("RawTextEngine.Run - Test Case " + parts[ID_DEX] + " Passed.");
+					System.Console.WriteLine("\tRawTextEngine.Run - Test Case " + parts[ID_DEX] + " Passed.");
 					reportPass(parts[MSG_DEX], id, rsp);
 				} else {
-					System.Console.WriteLine("RawTextEngine.Run - Test Case " + parts[ID_DEX] + " Failed.");
+					System.Console.WriteLine("\tRawTextEngine.Run - Test Case " + parts[ID_DEX] + " Failed.");
 					reportFail(parts[MSG_DEX], id, rsp);
 				}
 			} else {
-				System.Console.WriteLine("RawTextEngine.Run - " + tcLookup[id] + " is not formatted correctly");
+				System.Console.WriteLine("\tRawTextEngine.Run - " + tcLookup[id] + " is not formatted correctly");
 			}
 		}
 

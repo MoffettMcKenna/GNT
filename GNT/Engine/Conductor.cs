@@ -197,16 +197,16 @@ namespace GNT.Engine {
 
 			//process the file - if there is another section we will abort and call another
 			while ((line = reader.ReadLine()) != null) {
-				System.Console.WriteLine("Read line " + line);
+				//System.Console.WriteLine("Read line " + line);
 				if(checkForSection(line, out secName)) {
-					System.Console.WriteLine("\tLine " + line + " is new section header " + secName);
+					//System.Console.WriteLine("\tLine " + line + " is new section header " + secName);
 					processSection(secName, reader);
 					//on return we should have read any further sections and hit the EoF
 					break;
 				}
 				//if there's an equal sign this is most likely a field
 				else if (line.Contains("=")) {
-					System.Console.WriteLine("\tProcessing line as field");
+					//System.Console.WriteLine("\tProcessing line as field");
 					int lb = line.IndexOf('#');
 					int sc = line.IndexOf(';');
 

@@ -32,6 +32,7 @@ namespace GNT.Reporting {
 		/// </summary>
 		/// <param name="path">Full or relative path, including the filename, of the report.</param>
 		public TextReporter(string path) {
+			System.Console.WriteLine("\t\t\tCreating a TextReporter.");
 			fp = path;
 		}
 
@@ -157,7 +158,7 @@ namespace GNT.Reporting {
 				using (StreamWriter printer = new StreamWriter(fp, true)) {
 					try {
 						//write the line
-						printer.WriteLine(String.Format(sample, new object[] { testId, title, message }));
+						printer.WriteLine(String.Format(sample, new object[] { DateTime.Now.ToString(), testId, title, message }));
 					}
 					#region Exception Handling
 					catch (ObjectDisposedException ode) {
@@ -166,6 +167,10 @@ namespace GNT.Reporting {
 					}
 					catch (IOException ioe) {
 						System.Console.WriteLine("TextReporter.Update Error when writing: " + ioe.ToString());
+						return false;
+					}
+					catch (FormatException fe) {
+						System.Console.WriteLine("TextReporter.Update [" + sample + "] is a bad format: " + fe.ToString());
 						return false;
 					}
 					#endregion

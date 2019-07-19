@@ -174,6 +174,7 @@ namespace GNT.Engine {
 	class RawTextMechanic : AbsMechanic {
 
 		public RawTextMechanic() {
+			System.Console.WriteLine("\tCreating RawTextmechanic to build a RawTextEngine.");
 			eng = new RawTextEngine();
 		}
 

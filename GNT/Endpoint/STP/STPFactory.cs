@@ -17,6 +17,7 @@ namespace GNT.Endpoint.STP {
 		/// </summary>
 		/// <returns>The client object.</returns>
 		public override AbsClientEndpt CreateClient() {
+			System.Console.WriteLine("\t\t\tSTPFactory.CreateClient: Creating a client with default options.");
 			return new STPClient();
 		}
 
@@ -26,6 +27,7 @@ namespace GNT.Endpoint.STP {
 		/// <param name="type">Ignored</param>
 		/// <returns>The client object.</returns>
 		public override AbsClientEndpt CreateClient(string type) {
+			System.Console.WriteLine("\t\t\tSTPFactory.CreateClient: Creating a client with " + type + " option.");
 			return new STPClient();
 		}
 
@@ -34,6 +36,7 @@ namespace GNT.Endpoint.STP {
 		/// </summary>
 		/// <returns>The server object.</returns>
 		public override AbsServerEndpt CreateServer() {
+			System.Console.WriteLine("\t\t\tSTPFactory.CreateServer: Creating a server with default options.");
 			return new STPServer();
 		}
 
@@ -43,6 +46,7 @@ namespace GNT.Endpoint.STP {
 		/// <param name="type">This value is ignored for this protocol.</param>
 		/// <returns>The server object.</returns>
 		public override AbsServerEndpt CreateServer(string type) {
+			System.Console.WriteLine("\t\t\tSTPFactory.CreateServer: Creating a server with " + type + " option.");
 			return new STPServer();
 		}
 

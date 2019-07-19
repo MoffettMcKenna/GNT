@@ -78,8 +78,9 @@ namespace GNT.Endpoint.ASTP {
 		/// <returns>The decrypted value.</returns>
 		protected override char decryptChar(char c) {
 			char r = ' ';
-			int dex = Array.IndexOf(key, c);
-			if (dex >= 0) r = key[dex + shift];
+			int dex = Array.IndexOf(key, c) + shift;
+			if (dex >= 0) r = key[(dex > key.Length ? dex - key.Length : dex)];
+				//conditional prevents out of bounds exceptions
 			shift++;
 			return r;
 		}
@@ -91,8 +92,9 @@ namespace GNT.Endpoint.ASTP {
 		/// <returns>The encrypted value.</returns>
 		protected override char encryptChar(char c) {
 			char r = ' ';
-			int dex = Array.IndexOf(key, c);
-			if (dex >= 0) r = key[dex - shift];
+			int dex = Array.IndexOf(key, c) - shift;
+			if (dex >= 0) r = key[(dex < 0 ? key.Length + dex : dex)];
+				//conditional prevents out of bounds exceptions
 			shift++;
 			return r;
 		}
@@ -102,6 +104,7 @@ namespace GNT.Endpoint.ASTP {
 		/// </summary>
 		/// <returns>A copy of the cypher instance, including the current encryption key.</returns>
 		public override AbsASTPCypher Clone() {
+			System.Console.WriteLine("\t\t\tLeftShiftCypher.Clone: Making a new copy with shift = " + shift);
 			return (this.MemberwiseClone() as LeftShiftCypher);
 		}
 		#endregion
@@ -126,8 +129,9 @@ namespace GNT.Endpoint.ASTP {
 		/// <returns>The decrypted value.</returns>
 		protected override char decryptChar(char c) {
 			char r = ' ';
-			int dex = Array.IndexOf(key, c);
-			if (dex >= 0) r = key[dex - shift];
+			int dex = Array.IndexOf(key, c) - shift;
+			if (dex >= 0) r = key[(dex < 0 ? key.Length + dex : dex)];
+				//conditional prevents out of bounds exceptions
 			shift++;
 			return r;
 		}
@@ -139,8 +143,9 @@ namespace GNT.Endpoint.ASTP {
 		/// <returns>The encrypted value.</returns>
 		protected override char encryptChar(char c) {
 			char r = ' ';
-			int dex = Array.IndexOf(key, c);
-			if (dex >= 0) r = key[dex + shift];
+			int dex = Array.IndexOf(key, c) + shift;
+			if (dex >= 0) r = key[(dex > key.Length ? dex - key.Length : dex)];
+				//conditional prevents out of bounds exceptions
 			shift++;
 			return r;
 		}
@@ -150,6 +155,7 @@ namespace GNT.Endpoint.ASTP {
 		/// </summary>
 		/// <returns>A copy of the cypher instance, including the current encryption key.</returns>
 		public override AbsASTPCypher Clone() {
+			System.Console.WriteLine("\t\t\tRightShiftCypher.Clone: Making a new copy with shift = " + shift);
 			return (this.MemberwiseClone() as LeftShiftCypher);
 		}
 		#endregion
