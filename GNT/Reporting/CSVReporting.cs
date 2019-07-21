@@ -16,7 +16,16 @@ namespace GNT.Reporting {
 		/// </summary>
 		/// <param name="details">The full path to the file, including name.</param>
 		/// <returns>The reporter object.</returns>
-		public override AbsReportWriter CreateReporter(string details) => new CSVReporter(details);
+		public override AbsReportWriter CreateReporter(string details) {
+			try {
+				FileInfo fi = new FileInfo(details);
+				if (Directory.Exists(fi.Directory.FullName)) return new CSVReporter(details);
+				else throw new ArgumentException("Directory " + fi.Directory.FullName + " does not exist");
+			}
+			catch (Exception e) {
+				throw new ArgumentException("Error on checking the details in CSVWriterShop.", e);
+			}
+		} //end CreateReporter
 	}
 
 	/// <summary>

@@ -55,9 +55,25 @@ namespace GNT.Engine {
 				string shopType = "GNT.Reporting." + parts[0] + "WriterShop";
 
 				//get the constructor data and invoke it
-				Type t = Type.GetType(shopType);
-				AbsWriterShop shop = (Activator.CreateInstance(t) as AbsWriterShop);
-
+				AbsWriterShop shop;
+				try { 
+					Type t = Type.GetType(shopType);
+					shop = (Activator.CreateInstance(t) as AbsWriterShop);
+				}
+				#region Exception Handling
+				catch (TargetException te) {
+					System.Console.WriteLine("AbsEngine.Reporter - There was an issue invoking the setter on the property: " + te.Message);
+					return;
+				}
+				catch (TargetInvocationException tie) {
+					System.Console.WriteLine("AbsEngine.Reporter - There was an issue invoking the setter on the property: " + tie.Message);
+					return;
+				}
+				catch (MethodAccessException mae) {
+					System.Console.WriteLine("AbsEngine.Reporter - There was an issue invoking the setter on the property: " + mae.Message);
+					return;
+				}
+				#endregion
 				//add a reporter to the engine
 				eng.AddReporter(shop.CreateReporter(parts[1]));
 
