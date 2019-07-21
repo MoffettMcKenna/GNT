@@ -21,8 +21,10 @@ namespace GNT.Reporting {
 				FileInfo fi = new FileInfo(details);
 				if (Directory.Exists(fi.Directory.FullName)) return new TextReporter(details);
 				else throw new ArgumentException("Directory " + fi.Directory.FullName + " does not exist");
+				//TODO try and create it instead
 			}
 			catch (Exception e) {
+				//TODO improve the exception handling
 				throw new ArgumentException("Error on checking the details in TextWriterShop.", e);
 			}
 		} //end CreateReporter
