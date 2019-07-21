@@ -18,7 +18,8 @@ namespace GNT {
 			else {
 				System.Console.WriteLine("Processing Config file " + args[0]);
 				Conductor con = new Conductor(args[0]);
-				AbsEngine[] engs = con.BuildEngines();
+				con.BuildEngines();
+				AbsEngine[] engs = con.Engines;
 
 				System.Console.WriteLine("Read out " + engs.Length + " engines.");
 

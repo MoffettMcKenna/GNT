@@ -11,6 +11,7 @@ namespace GNT.Engine {
 	class Conductor {
 		private string cfgfile;
 		private const string SRC = "Source";
+		List<AbsEngine> motors;
 
 		/// <summary>
 		/// 
@@ -18,14 +19,14 @@ namespace GNT.Engine {
 		/// <param name="file"></param>
 		public Conductor(string file) {
 			cfgfile = file;
+			motors = new List<AbsEngine>();
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public AbsEngine[] BuildEngines() {
-			List<AbsEngine> motors = new List<AbsEngine>();
+		public void BuildEngines() {
 			//using the List<KeyValuePair> structure allows me to have duplicate keys - multiple folders, reporters, etc..
 			Dictionary<string, List<KeyValuePair<string, string>>> sections;
 			
@@ -120,13 +121,14 @@ namespace GNT.Engine {
 				else System.Console.WriteLine("Engine was incomplete and not added.");
 			} //end foreach section
 
-			return motors.ToArray();
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public string Cfgfile { get => cfgfile; set => cfgfile = value; }
+
+		public AbsEngine[] Engines {  get { return motors.ToArray(); } }
 	} //end class Conductor
 
 	/// <summary>

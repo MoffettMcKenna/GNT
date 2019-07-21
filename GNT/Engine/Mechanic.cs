@@ -80,7 +80,7 @@ namespace GNT.Engine {
 		/* Extracted so it can be called from either Client or 
 		 * Prototype based on what is called first.
 		 */
-		private void makeClient() {
+		protected void makeClient() {
 			//build the full type string
 			string factType = "GNT.Endpoint." + proto + "." + proto + "Factory";
 
@@ -116,7 +116,7 @@ namespace GNT.Engine {
 		/* Extracted so it can be called from either Server or 
 		 * Prototype based on what is called first.
 		 */
-		private void makeServer() {
+		protected void makeServer() {
 			//build the full type string
 			string factType = "GNT.Endpoint." + proto + "." + proto + "Factory";
 
