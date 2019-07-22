@@ -19,7 +19,7 @@ namespace GNT.Endpoint.ASTP {
 		/// <param name="code">The encryption for messages.</param>
 		/// <param name="p">The port to use with the socket.</param>
 		public ASTPConversation(AbsASTPCypher code, int p) {
-			this.cypher = code.Clone();
+			this.cypher = code;
 			this.messages = new ConcurrentQueue<string>();
 			this.responses = new ConcurrentQueue<string>();
 			port = p;

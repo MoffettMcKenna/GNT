@@ -13,7 +13,7 @@ namespace GNT.Endpoint.STP {
 		public static STPFactory Instance { get { return instance; } }
 
 		/// <summary>
-		/// Creates a client who will use the default interface.
+		/// Creates a client.
 		/// </summary>
 		/// <returns>The client object.</returns>
 		public override AbsClientEndpt CreateClient() {
@@ -32,7 +32,7 @@ namespace GNT.Endpoint.STP {
 		}
 
 		/// <summary>
-		/// Creates a server who will use the default interface.
+		/// Creates a server.
 		/// </summary>
 		/// <returns>The server object.</returns>
 		public override AbsServerEndpt CreateServer() {

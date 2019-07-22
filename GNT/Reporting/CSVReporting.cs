@@ -18,7 +18,10 @@ namespace GNT.Reporting {
 		/// <returns>The reporter object.</returns>
 		public override AbsReportWriter CreateReporter(string details) {
 			try {
+				//get the system information on the requested file
 				FileInfo fi = new FileInfo(details);
+
+				//test if the parent folder exists
 				if (Directory.Exists(fi.Directory.FullName)) return new CSVReporter(details);
 				else throw new ArgumentException("Directory " + fi.Directory.FullName + " does not exist");
 				//TODO try and create it instead

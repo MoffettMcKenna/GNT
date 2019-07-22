@@ -30,9 +30,9 @@ namespace GNT.Endpoint.ASTP {
 		/// <returns>The response or an empty string if there was none.</returns>
 		public override string SendMsg(string msg) {
 			//TODO with the changes in conversation make this actually send and receive
-			ASTPConversation convo = new ASTPConversation(cypher, 0);
+			ASTPConversation convo = new ASTPConversation(cypher.Clone(), 0);
 			System.Console.WriteLine("\t\tASTPClient.SendMsg: Sending Message " + msg);
-			convo.AddMessage(msg);
+			convo.AddMessage(msg); //add the message to the Q
 			convo.ProcessMsg(null, null);  //simulate the processing thread
 			string test = string.Empty;
 			convo.GetResponse(out test);  //making this call sets test
